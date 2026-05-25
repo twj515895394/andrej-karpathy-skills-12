@@ -1,27 +1,30 @@
 {
-  "name": "karpathy-skills",
-  "id": "karpathy-skills",
+  "name": "karpathy-skills-12",
+  "id": "karpathy-skills-12",
   "owner": {
-    "name": "forrestchang"
+    "name": "twj515895394"
   },
   "metadata": {
-    "description": "Behavioral guidelines to reduce common LLM coding mistakes, derived from Andrej Karpathy's observations",
-    "version": "1.0.0"
+    "description": "English-first 12-rule behavior contract for Claude Code, Cursor, and agent skills",
+    "version": "1.1.0"
   },
   "plugins": [
     {
-      "name": "andrej-karpathy-skills",
+      "name": "andrej-karpathy-skills-12",
       "source": "./",
-      "description": "Behavioral guidelines to reduce common LLM coding mistakes: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution",
-      "version": "1.0.0",
+      "description": "Karpathy-inspired 12-rule behavior contract: think before coding, keep changes simple and surgical, verify intent, checkpoint long work, and fail loud",
+      "version": "1.1.0",
       "author": {
-        "name": "forrestchang"
+        "name": "twj515895394"
       },
       "keywords": [
         "guidelines",
         "best-practices",
         "coding",
-        "karpathy"
+        "karpathy",
+        "claude-code",
+        "cursor",
+        "agent"
       ],
       "category": "workflow"
     }
