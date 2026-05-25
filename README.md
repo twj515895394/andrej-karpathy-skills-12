@@ -8,7 +8,7 @@ A compact, English-first behavior contract for Claude Code, Cursor, and reusable
 
 The goal is not to make the model "careful" in a vague way. The goal is to turn recurring failure modes into short, executable rules that can live in `CLAUDE.md`, Cursor rules, and reusable skills.
 
-## Why this fork exists
+## What this project solves
 
 The original template focused on four common coding failures:
 
@@ -17,7 +17,7 @@ The original template focused on four common coding failures:
 3. unnecessary side-effect edits,
 4. weak or missing success criteria.
 
-This fork keeps those four rules and adds eight rules for newer agent-style workflows: deterministic logic boundaries, token budgets, conflicting codebase patterns, read-before-write discipline, meaningful tests, checkpoints, convention matching, and loud failure.
+This project keeps those four rules and adds eight rules for newer agent-style workflows: deterministic logic boundaries, token budgets, conflicting codebase patterns, read-before-write discipline, meaningful tests, checkpoints, convention matching, and loud failure.
 
 ## What is included
 
