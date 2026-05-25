@@ -1,67 +1,74 @@
 ---
 name: karpathy-guidelines
-description: Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria.
+description: English 12-rule behavior contract to reduce common LLM coding and agent workflow mistakes.
 license: MIT
 ---
 
-# Karpathy Guidelines
+# Karpathy Guidelines — 12 Rules
 
-Behavioral guidelines to reduce common LLM coding mistakes, derived from [Andrej Karpathy's observations](https://x.com/karpathy/status/2015883857489522876) on LLM coding pitfalls.
+Behavioral guidelines to reduce common LLM coding mistakes, derived from Andrej Karpathy's observations and extended for multi-step agent workflows.
 
-**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+These rules apply to every task in this project unless explicitly overridden.
+Bias: caution over speed on non-trivial work. Use judgment on trivial tasks.
 
-## 1. Think Before Coding
+## Rule 1 — Think Before Coding
+State assumptions explicitly. If uncertain, ask rather than guess.
+Present multiple interpretations when ambiguity exists.
+Push back when a simpler approach exists.
+Stop when confused. Name what is unclear.
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+## Rule 2 — Simplicity First
+Use the minimum code that solves the problem. Nothing speculative.
+No features beyond what was asked. No abstractions for single-use code.
+Test: would a senior engineer say this is overcomplicated? If yes, simplify.
 
-Before implementing:
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
+## Rule 3 — Surgical Changes
+Touch only what you must. Clean up only your own mess.
+Do not "improve" adjacent code, comments, or formatting.
+Do not refactor what is not broken. Match existing style.
+Every changed line should trace directly to the user's request.
 
-## 2. Simplicity First
+## Rule 4 — Goal-Driven Execution
+Define success criteria. Loop until verified.
+Transform vague tasks into verifiable goals.
+Strong success criteria let you iterate independently.
 
-**Minimum code that solves the problem. Nothing speculative.**
+## Rule 5 — Use the Model Only for Judgment Calls
+Use the model for classification, drafting, summarization, and extraction from unstructured text.
+Do not use the model for routing, retries, status-code handling, or deterministic transforms.
+If code can answer, code answers.
 
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
+## Rule 6 — Token Budgets Are Not Advisory
+Per-task budget: 4,000 tokens. Per-session budget: 30,000 tokens.
+If approaching budget, summarize and start fresh.
+Surface the breach. Do not silently overrun.
 
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+## Rule 7 — Surface Conflicts, Do Not Average Them
+If two existing patterns contradict, do not blend them.
+Pick one, preferably the more recent or more tested pattern.
+Explain why and flag the other pattern for later cleanup.
 
-## 3. Surgical Changes
+## Rule 8 — Read Before You Write
+Before adding code, read the file exports, immediate callers, and obvious shared utilities.
+If you do not understand why existing code is structured a certain way, ask before adding to it.
+"Looks orthogonal" is dangerous.
 
-**Touch only what you must. Clean up only your own mess.**
+## Rule 9 — Tests Verify Intent, Not Just Behavior
+Tests must encode why the behavior matters, not only what it does.
+A test that cannot fail when business logic changes is weak or wrong.
+Do not treat shallow passing tests as proof of correctness.
 
-When editing existing code:
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
+## Rule 10 — Checkpoint After Every Significant Step
+After each significant step, summarize what was done, what was verified, and what remains.
+Do not continue from a state you cannot describe back to the user.
+If you lose track, stop and restate.
 
-When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
+## Rule 11 — Match Codebase Conventions, Even If You Disagree
+Inside the codebase, conformance beats taste.
+Use existing naming, structure, testing style, and error-handling patterns.
+If a convention is genuinely harmful, surface it. Do not fork it silently.
 
-The test: Every changed line should trace directly to the user's request.
-
-## 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+## Rule 12 — Fail Loud
+"Completed" is wrong if anything was skipped silently.
+"Tests pass" is wrong if any relevant tests were skipped.
+Default to surfacing uncertainty, not hiding it.
