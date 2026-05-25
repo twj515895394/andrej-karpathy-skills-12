@@ -1,0 +1,27 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Karpathy-inspired Claude Code Guidelines: 12 Rules</title>
+  <desc id="desc">A diagram showing an English-first 12-rule behavior contract, combining 4 original coding rules with 8 expanded agent workflow rules.</desc>
+  <rect width="1280" height="640" rx="32" fill="#0F172A"/>
+  <rect x="48" y="48" width="1184" height="544" rx="28" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <text x="92" y="118" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="800">Karpathy-Inspired Claude Code Guidelines</text>
+  <text x="92" y="160" fill="#CBD5E1" font-family="Inter, Arial, sans-serif" font-size="24">12-rule behavior contract for coding agents</text>
+  <rect x="92" y="210" width="492" height="300" rx="22" fill="#1E293B" stroke="#475569" stroke-width="2"/>
+  <text x="124" y="260" fill="#93C5FD" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">Original 4 coding rules</text>
+  <text x="124" y="306" fill="#E2E8F0" font-family="Inter, Arial, sans-serif" font-size="22">1. Think Before Coding</text>
+  <text x="124" y="346" fill="#E2E8F0" font-family="Inter, Arial, sans-serif" font-size="22">2. Simplicity First</text>
+  <text x="124" y="386" fill="#E2E8F0" font-family="Inter, Arial, sans-serif" font-size="22">3. Surgical Changes</text>
+  <text x="124" y="426" fill="#E2E8F0" font-family="Inter, Arial, sans-serif" font-size="22">4. Goal-Driven Execution</text>
+  <text x="124" y="474" fill="#94A3B8" font-family="Inter, Arial, sans-serif" font-size="18">Prevents silent assumptions, overengineering,</text>
+  <text x="124" y="500" fill="#94A3B8" font-family="Inter, Arial, sans-serif" font-size="18">unrelated edits, and vague success criteria.</text>
+  <rect x="696" y="210" width="492" height="300" rx="22" fill="#1E293B" stroke="#475569" stroke-width="2"/>
+  <text x="728" y="260" fill="#86EFAC" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">Expanded 8 agent workflow rules</text>
+  <text x="728" y="306" fill="#E2E8F0" font-family="Inter, Arial, sans-serif" font-size="22">5. Judgment Calls Only</text>
+  <text x="728" y="346" fill="#E2E8F0" font-family="Inter, Arial, sans-serif" font-size="22">6. Token Budgets</text>
+  <text x="728" y="386" fill="#E2E8F0" font-family="Inter, Arial, sans-serif" font-size="22">7. Surface Conflicts</text>
+  <text x="728" y="426" fill="#E2E8F0" font-family="Inter, Arial, sans-serif" font-size="22">8-12. Read, Test, Checkpoint, Conform, Fail Loud</text>
+  <text x="728" y="474" fill="#94A3B8" font-family="Inter, Arial, sans-serif" font-size="18">Prevents runaway sessions, pattern blending,</text>
+  <text x="728" y="500" fill="#94A3B8" font-family="Inter, Arial, sans-serif" font-size="18">weak tests, lost state, and false success.</text>
+  <path d="M608 360 H672" stroke="#64748B" stroke-width="6" stroke-linecap="round"/>
+  <path d="M654 342 L672 360 L654 378" stroke="#64748B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="92" y="558" fill="#CBD5E1" font-family="Inter, Arial, sans-serif" font-size="20">English-first • Chinese version included • CLAUDE.md + Cursor rules + reusable skills</text>
+</svg>
