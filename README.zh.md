@@ -1,170 +1,111 @@
-# 受 Karpathy 启发的 Claude Code 指南
+![Karpathy Skills 12 概览图](./assets/karpathy-skills-12-overview.svg)
 
-> 查看我的新项目 [Multica](https://github.com/multica-ai/multica) —— 一个用于运行和管理编码智能体的开源平台，支持可复用的技能。
->
-> 在 X 上关注我：[https://x.com/jiayuan_jy](https://x.com/jiayuan_jy)
-
-一个单一的 `CLAUDE.md` 文件，用于改善 Claude Code 的行为，源自 [Andrej Karpathy 的观察](https://x.com/karpathy/status/2015883857489522876) 关于 LLM 编码陷阱的总结。
+# Karpathy 启发的 Claude Code 指南 — 12 条规则
 
 [English](./README.md) | 简体中文
 
-## 问题所在
+这是一个英文为主、同时提供中文版本的 Claude Code / Cursor / Agent Skill 行为约束模板。它从 Andrej Karpathy 对 LLM 编码失败模式的观察出发，把原始 4 条规则扩展成适合多步骤 Agent 工作流的 12 条规则版本。
 
-来自 Andrej 的推文：
+这个项目的目标不是泛泛地要求模型“认真一点”，而是把真实出现过的失败模式转化成短小、可执行、可检查的规则，并放进 `CLAUDE.md`、Cursor rules 和可复用 skill 里。
 
-> "模型会代你做错误假设，然后不假思索地执行。它们不管理自身的困惑，不寻求澄清，不呈现矛盾，不展示权衡，在应该提出异议时也不反驳。"
+## 这个 fork 解决什么问题
 
-> "它们真的很喜欢把代码和 API 搞复杂，堆砌抽象概念，不清理死代码……明明 100 行能搞定的事情，非要实现成 1000 行的臃肿架构。"
+原始模板主要覆盖四类编码失败：
 
-> "它们有时仍会改动或删除自己理解不足的代码和注释，即使这些内容与任务本身无关。"
+1. 静默做错误假设，
+2. 过度复杂化代码和 API，
+3. 顺手修改无关代码，
+4. 成功标准弱或不可验证。
 
-## 解决方案
+这个 fork 保留这 4 条基础规则，并补充 8 条更适合 Agent 工作流的规则：确定性逻辑边界、token 预算、冲突模式处理、写前阅读、有意义的测试、检查点、遵守代码库约定，以及显式暴露失败。
 
-四个原则，集中在一个文件中，直接解决这些问题：
+## 文件结构
 
-| 原则 | 解决什么问题 |
-|-----------|-----------|
-| **编码前思考** | 错误假设、隐藏困惑、缺少权衡 |
-| **简洁优先** | 过度复杂、臃肿抽象 |
-| **精准修改** | 无关编辑、触碰不应碰的代码 |
-| **目标驱动执行** | 通过测试优先、可验证的成功标准 |
+| 文件 | 用途 |
+| --- | --- |
+| [`CLAUDE.md`](./CLAUDE.md) | 英文主版本，Claude Code 12 条行为契约 |
+| [`CLAUDE.zh.md`](./CLAUDE.zh.md) | 简体中文版本，同步 12 条规则 |
+| [`.cursor/rules/karpathy-guidelines.mdc`](./.cursor/rules/karpathy-guidelines.mdc) | 英文 Cursor 项目规则，默认启用 |
+| [`.cursor/rules/karpathy-guidelines.zh.mdc`](./.cursor/rules/karpathy-guidelines.zh.mdc) | 中文 Cursor 参考规则，默认不启用 |
+| [`skills/karpathy-guidelines/SKILL.md`](./skills/karpathy-guidelines/SKILL.md) | 英文可复用 skill |
+| [`skills/karpathy-guidelines-zh/SKILL.md`](./skills/karpathy-guidelines-zh/SKILL.md) | 中文可复用 skill |
 
-## 四个原则详解
+## 12 条规则
 
-### 1. 编码前思考
-
-**不要假设。不要隐藏困惑。呈现权衡。**
-
-LLM 经常默默选择一种解释然后执行。这个原则强制明确推理：
-
-- **明确说明假设** — 如果不确定，询问而不是猜测
-- **呈现多种解释** — 当存在歧义时，不要默默选择
-- **适时提出异议** — 如果存在更简单的方法，说出来
-- **困惑时停下来** — 指出不清楚的地方并要求澄清
-
-### 2. 简洁优先
-
-**用最少的代码解决问题。不要过度推测。**
-
-对抗过度工程的倾向：
-
-- 不要添加要求之外的功能
-- 不要为一次性代码创建抽象
-- 不要添加未要求的"灵活性"或"可配置性"
-- 不要为不可能发生的场景做错误处理
-- 如果 200 行代码可以写成 50 行，重写它
-
-**检验标准：** 资深工程师会觉得这过于复杂吗？如果是，简化。
-
-### 3. 精准修改
-
-**只碰必须碰的。只清理自己造成的混乱。**
-
-编辑现有代码时：
-
-- 不要"改进"相邻的代码、注释或格式
-- 不要重构没坏的东西
-- 匹配现有风格，即使你更倾向于不同的写法
-- 如果注意到无关的死代码，提一下 —— 不要删除它
-
-当你的改动产生孤儿代码时：
-
-- 删除因你的改动而变得无用的导入/变量/函数
-- 不要删除预先存在的死代码，除非被要求
-
-**检验标准：** 每一行修改都应该能直接追溯到用户的请求。
-
-### 4. 目标驱动执行
-
-**定义成功标准。循环验证直到达成。**
-
-将指令式任务转化为可验证的目标：
-
-| 不要这样做... | 转化为... |
-|--------------|-----------------|
-| "添加验证" | "为无效输入编写测试，然后让它们通过" |
-| "修复 bug" | "编写重现 bug 的测试，然后让它通过" |
-| "重构 X" | "确保重构前后测试都能通过" |
-
-对于多步骤任务，说明一个简短的计划：
-
-```
-1. [步骤] → 验证: [检查]
-2. [步骤] → 验证: [检查]
-3. [步骤] → 验证: [检查]
-```
-
-强有力的成功标准让 LLM 能够独立循环执行。弱标准（"让它工作"）需要不断澄清。
+| # | 规则 | 防止的问题 |
+| --- | --- | --- |
+| 1 | 编码前先思考 | 静默假设、隐藏困惑 |
+| 2 | 简洁优先 | 过度工程、投机性功能 |
+| 3 | 外科手术式修改 | 无关修改、意外重构 |
+| 4 | 目标驱动执行 | 模糊任务、不可验证完成 |
+| 5 | 只把模型用于需要判断力的地方 | 不稳定的模型路由/重试逻辑 |
+| 6 | Token 预算不是建议 | session 失控、上下文漂移 |
+| 7 | 暴露冲突，不要折中平均 | 混合互相矛盾的模式 |
+| 8 | 写之前先读 | 重复代码、局部上下文错误 |
+| 9 | 测试要验证意图，而不只是行为 | 浅层测试、无意义通过 |
+| 10 | 每个重要步骤后设置检查点 | 多步骤漂移、状态丢失 |
+| 11 | 匹配代码库约定 | 风格分叉、框架不一致 |
+| 12 | 大声失败 | 假成功、隐藏不确定性 |
 
 ## 安装
 
-**选项 A：Claude Code 插件（推荐）**
+### 方式 A：Claude Code 插件
 
-在 Claude Code 中，首先添加插件市场：
-```
-/plugin marketplace add forrestchang/andrej-karpathy-skills
-```
+在 Claude Code 中添加 marketplace 并安装插件：
 
-然后安装插件：
-```
-/plugin install andrej-karpathy-skills@karpathy-skills
+```bash
+/plugin marketplace add twj515895394/andrej-karpathy-skills-12
+/plugin install andrej-karpathy-skills-12@karpathy-skills-12
 ```
 
-这会将指南安装为 Claude Code 插件，使其在你所有项目中可用。
+这样可以在多个项目中复用该指南 skill。
 
-**选项 B：CLAUDE.md（按项目）**
+### 方式 B：项目级 `CLAUDE.md`
 
 新项目：
+
 ```bash
-curl -o CLAUDE.md https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md
+curl -o CLAUDE.md https://raw.githubusercontent.com/twj515895394/andrej-karpathy-skills-12/main/CLAUDE.md
 ```
 
-已有项目（追加）：
+已有项目追加：
+
 ```bash
 echo "" >> CLAUDE.md
-curl https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
+curl https://raw.githubusercontent.com/twj515895394/andrej-karpathy-skills-12/main/CLAUDE.md >> CLAUDE.md
+```
+
+中文版本：
+
+```bash
+curl -o CLAUDE.zh.md https://raw.githubusercontent.com/twj515895394/andrej-karpathy-skills-12/main/CLAUDE.zh.md
 ```
 
 ## 在 Cursor 中使用
 
-本仓库包含一个已提交的 Cursor 项目规则 ([`.cursor/rules/karpathy-guidelines.mdc`](.cursor/rules/karpathy-guidelines.mdc))，因此在 Cursor 中打开项目时同样适用这些指南。详情请参见 **[CURSOR.md](CURSOR.md)**，包括如何在其他项目中使用该规则，以及它与 Claude Code 的关系。
+仓库内已经包含 Cursor 项目规则：[`.cursor/rules/karpathy-guidelines.mdc`](./.cursor/rules/karpathy-guidelines.mdc)。该英文规则设置了 `alwaysApply: true`，打开项目时可自动生效。
 
-## 核心洞察
+中文参考规则位于 [`.cursor/rules/karpathy-guidelines.zh.mdc`](./.cursor/rules/karpathy-guidelines.zh.mdc)。它默认不自动启用，避免中英文规则重复注入导致指令压力过大。
 
-来自 Andrej：
+更多说明见 [`CURSOR.md`](./CURSOR.md)。
 
-> "LLM 非常擅长循环执行直到达成特定目标……不要告诉它该做什么，给它成功标准，然后看着它完成。"
+## 定制建议
 
-"目标驱动执行"原则正是捕捉了这一点：将指令式指令转化为带有验证循环的声明式目标。
-
-## 如何判断它在起作用
-
-如果你看到以下情况，说明这些指南正在发挥作用：
-
-- **diff 中不必要的改动更少** —— 只有请求的改动出现
-- **因过度复杂而导致的重写更少** —— 代码第一次就写得简洁
-- **澄清问题在实现之前提出** —— 而不是在犯错之后
-- **干净、精简的 PR** —— 没有顺带的重构或"改进"
-
-## 定制
-
-这些指南设计用于与项目特定指令合并。将它们添加到你现有的 `CLAUDE.md` 或创建一个新的。
-
-对于项目特定规则，添加如下章节：
+基础规则应保持短小。项目专属规则可以加在 12 条规则之后，例如：
 
 ```markdown
-## 项目特定指南
+## Project-Specific Guidelines
 
-- 使用 TypeScript 严格模式
-- 所有 API 端点必须有测试
-- 遵循 `src/utils/errors.ts` 中现有的错误处理模式
+- Use TypeScript strict mode.
+- All API endpoints must have tests.
+- Follow the existing error handling pattern in `src/utils/errors.ts`.
 ```
 
-## 权衡说明
+一个真正匹配你失败模式的 6 条规则文件，胜过一份塞满无用偏好的长规则文件。
 
-这些指南倾向于**谨慎而非速度**。对于琐碎的任务（简单的拼写错误修复、显而易见的一行修改），请自行判断 —— 并非每个改动都需要完整的严谨流程。
+## 核心思想
 
-目标是减少非琐碎工作中的代价高昂的错误，而不是拖慢简单任务。
+`CLAUDE.md` 不应该是偏好垃圾桶，而应该是一份行为契约：每条规则都应该对应一个你真实见过、想要避免的失败模式。
 
 ## 许可
 
