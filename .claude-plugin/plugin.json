@@ -1,11 +1,14 @@
 {
-  "name": "andrej-karpathy-skills",
-  "description": "Behavioral guidelines to reduce common LLM coding mistakes, derived from Andrej Karpathy's observations on LLM coding pitfalls",
-  "version": "1.0.0",
+  "name": "andrej-karpathy-skills-12",
+  "description": "English-first 12-rule behavior contract for Claude Code, Cursor, and agent skills",
+  "version": "1.1.0",
   "author": {
-    "name": "forrestchang"
+    "name": "twj515895394"
   },
   "license": "MIT",
-  "keywords": ["guidelines", "best-practices", "coding", "karpathy"],
-  "skills": ["./skills/karpathy-guidelines"]
+  "keywords": ["guidelines", "best-practices", "coding", "karpathy", "claude-code", "cursor", "agent"],
+  "skills": [
+    "./skills/karpathy-guidelines",
+    "./skills/karpathy-guidelines-zh"
+  ]
 }
