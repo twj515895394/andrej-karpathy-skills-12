@@ -1,170 +1,111 @@
-# Karpathy-Inspired Claude Code Guidelines
+![Karpathy Skills 12 overview](./assets/karpathy-skills-12-overview.svg)
 
-> Check out my new project [Multica](https://github.com/multica-ai/multica) — an open-source platform for running and managing coding agents with reusable skills.
->
-> Follow me on X: [https://x.com/jiayuan_jy](https://x.com/jiayuan_jy)
-
-A single `CLAUDE.md` file to improve Claude Code behavior, derived from [Andrej Karpathy's observations](https://x.com/karpathy/status/2015883857489522876) on LLM coding pitfalls.
+# Karpathy-Inspired Claude Code Guidelines — 12 Rules
 
 English | [简体中文](./README.zh.md)
 
-## The Problems
+A compact, English-first behavior contract for Claude Code, Cursor, and reusable agent skills. It starts from Andrej Karpathy's observations about LLM coding failures and extends the original 4-rule template into a 12-rule version for modern multi-step agent workflows.
 
-From Andrej's post:
+The goal is not to make the model "careful" in a vague way. The goal is to turn recurring failure modes into short, executable rules that can live in `CLAUDE.md`, Cursor rules, and reusable skills.
 
-> "The models make wrong assumptions on your behalf and just run along with them without checking. They don't manage their confusion, don't seek clarifications, don't surface inconsistencies, don't present tradeoffs, don't push back when they should."
+## Why this fork exists
 
-> "They really like to overcomplicate code and APIs, bloat abstractions, don't clean up dead code... implement a bloated construction over 1000 lines when 100 would do."
+The original template focused on four common coding failures:
 
-> "They still sometimes change/remove comments and code they don't sufficiently understand as side effects, even if orthogonal to the task."
+1. silent wrong assumptions,
+2. overcomplicated code and APIs,
+3. unnecessary side-effect edits,
+4. weak or missing success criteria.
 
-## The Solution
+This fork keeps those four rules and adds eight rules for newer agent-style workflows: deterministic logic boundaries, token budgets, conflicting codebase patterns, read-before-write discipline, meaningful tests, checkpoints, convention matching, and loud failure.
 
-Four principles in one file that directly address these issues:
+## What is included
 
-| Principle | Addresses |
-|-----------|-----------|
-| **Think Before Coding** | Wrong assumptions, hidden confusion, missing tradeoffs |
-| **Simplicity First** | Overcomplication, bloated abstractions |
-| **Surgical Changes** | Orthogonal edits, touching code you shouldn't |
-| **Goal-Driven Execution** | Leverage through tests-first, verifiable success criteria |
+| File | Purpose |
+| --- | --- |
+| [`CLAUDE.md`](./CLAUDE.md) | English primary 12-rule behavior contract for Claude Code |
+| [`CLAUDE.zh.md`](./CLAUDE.zh.md) | Simplified Chinese version of the same 12 rules |
+| [`.cursor/rules/karpathy-guidelines.mdc`](./.cursor/rules/karpathy-guidelines.mdc) | English Cursor project rule, enabled by default |
+| [`.cursor/rules/karpathy-guidelines.zh.mdc`](./.cursor/rules/karpathy-guidelines.zh.mdc) | Chinese Cursor reference rule, not enabled by default |
+| [`skills/karpathy-guidelines/SKILL.md`](./skills/karpathy-guidelines/SKILL.md) | English reusable skill |
+| [`skills/karpathy-guidelines-zh/SKILL.md`](./skills/karpathy-guidelines-zh/SKILL.md) | Chinese reusable skill |
 
-## The Four Principles in Detail
+## The 12 rules
 
-### 1. Think Before Coding
-
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
-
-LLMs often pick an interpretation silently and run with it. This principle forces explicit reasoning:
-
-- **State assumptions explicitly** — If uncertain, ask rather than guess
-- **Present multiple interpretations** — Don't pick silently when ambiguity exists
-- **Push back when warranted** — If a simpler approach exists, say so
-- **Stop when confused** — Name what's unclear and ask for clarification
-
-### 2. Simplicity First
-
-**Minimum code that solves the problem. Nothing speculative.**
-
-Combat the tendency toward overengineering:
-
-- No features beyond what was asked
-- No abstractions for single-use code
-- No "flexibility" or "configurability" that wasn't requested
-- No error handling for impossible scenarios
-- If 200 lines could be 50, rewrite it
-
-**The test:** Would a senior engineer say this is overcomplicated? If yes, simplify.
-
-### 3. Surgical Changes
-
-**Touch only what you must. Clean up only your own mess.**
-
-When editing existing code:
-
-- Don't "improve" adjacent code, comments, or formatting
-- Don't refactor things that aren't broken
-- Match existing style, even if you'd do it differently
-- If you notice unrelated dead code, mention it — don't delete it
-
-When your changes create orphans:
-
-- Remove imports/variables/functions that YOUR changes made unused
-- Don't remove pre-existing dead code unless asked
-
-**The test:** Every changed line should trace directly to the user's request.
-
-### 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform imperative tasks into verifiable goals:
-
-| Instead of... | Transform to... |
-|--------------|-----------------|
-| "Add validation" | "Write tests for invalid inputs, then make them pass" |
-| "Fix the bug" | "Write a test that reproduces it, then make it pass" |
-| "Refactor X" | "Ensure tests pass before and after" |
-
-For multi-step tasks, state a brief plan:
-
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let the LLM loop independently. Weak criteria ("make it work") require constant clarification.
+| # | Rule | Prevents |
+| --- | --- | --- |
+| 1 | Think Before Coding | silent assumptions, hidden confusion |
+| 2 | Simplicity First | overengineering, speculative features |
+| 3 | Surgical Changes | unrelated edits, accidental refactors |
+| 4 | Goal-Driven Execution | vague work, unverifiable completion |
+| 5 | Use the Model Only for Judgment Calls | unstable model-driven routing/retry logic |
+| 6 | Token Budgets Are Not Advisory | runaway sessions and context drift |
+| 7 | Surface Conflicts, Do Not Average Them | blended inconsistent patterns |
+| 8 | Read Before You Write | duplicate code and local-context mistakes |
+| 9 | Tests Verify Intent, Not Just Behavior | shallow tests that prove little |
+| 10 | Checkpoint After Every Significant Step | multi-step drift and lost state |
+| 11 | Match Codebase Conventions | style forks and framework inconsistency |
+| 12 | Fail Loud | false success and hidden uncertainty |
 
 ## Install
 
-**Option A: Claude Code Plugin (recommended)**
+### Option A: Claude Code plugin
 
-From within Claude Code, first add the marketplace:
-```
-/plugin marketplace add forrestchang/andrej-karpathy-skills
-```
+From within Claude Code, add the marketplace and install the plugin:
 
-Then install the plugin:
-```
-/plugin install andrej-karpathy-skills@karpathy-skills
+```bash
+/plugin marketplace add twj515895394/andrej-karpathy-skills-12
+/plugin install andrej-karpathy-skills-12@karpathy-skills-12
 ```
 
-This installs the guidelines as a Claude Code plugin, making the skill available across all your projects.
+This exposes the guideline skill across projects.
 
-**Option B: CLAUDE.md (per-project)**
+### Option B: Per-project `CLAUDE.md`
 
 New project:
+
 ```bash
-curl -o CLAUDE.md https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md
+curl -o CLAUDE.md https://raw.githubusercontent.com/twj515895394/andrej-karpathy-skills-12/main/CLAUDE.md
 ```
 
-Existing project (append):
+Existing project:
+
 ```bash
 echo "" >> CLAUDE.md
-curl https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
+curl https://raw.githubusercontent.com/twj515895394/andrej-karpathy-skills-12/main/CLAUDE.md >> CLAUDE.md
+```
+
+Chinese version:
+
+```bash
+curl -o CLAUDE.zh.md https://raw.githubusercontent.com/twj515895394/andrej-karpathy-skills-12/main/CLAUDE.zh.md
 ```
 
 ## Using with Cursor
 
-This repository includes a committed Cursor project rule ([`.cursor/rules/karpathy-guidelines.mdc`](.cursor/rules/karpathy-guidelines.mdc)) so the same guidelines apply when you open the project in Cursor. See **[CURSOR.md](CURSOR.md)** for setup, using the rule in other projects, and how this relates to Claude Code.
+This repository includes a committed Cursor project rule at [`.cursor/rules/karpathy-guidelines.mdc`](./.cursor/rules/karpathy-guidelines.mdc). It has `alwaysApply: true`, so Cursor can apply the English 12-rule contract automatically when the project is opened.
 
-## Key Insight
+A Chinese reference rule is also available at [`.cursor/rules/karpathy-guidelines.zh.mdc`](./.cursor/rules/karpathy-guidelines.zh.mdc). It is intentionally not enabled by default to avoid duplicate instruction pressure.
 
-From Andrej:
+See [`CURSOR.md`](./CURSOR.md) for more details.
 
-> "LLMs are exceptionally good at looping until they meet specific goals... Don't tell it what to do, give it success criteria and watch it go."
+## Customization guidance
 
-The "Goal-Driven Execution" principle captures this: transform imperative instructions into declarative goals with verification loops.
-
-## How to Know It's Working
-
-These guidelines are working if you see:
-
-- **Fewer unnecessary changes in diffs** — Only requested changes appear
-- **Fewer rewrites due to overcomplication** — Code is simple the first time
-- **Clarifying questions come before implementation** — Not after mistakes
-- **Clean, minimal PRs** — No drive-by refactoring or "improvements"
-
-## Customization
-
-These guidelines are designed to be merged with project-specific instructions. Add them to your existing `CLAUDE.md` or create a new one.
-
-For project-specific rules, add sections like:
+Keep the base rules short. Add project-specific instructions after the 12 rules, such as:
 
 ```markdown
 ## Project-Specific Guidelines
 
-- Use TypeScript strict mode
-- All API endpoints must have tests
-- Follow the existing error handling patterns in `src/utils/errors.ts`
+- Use TypeScript strict mode.
+- All API endpoints must have tests.
+- Follow the existing error handling pattern in `src/utils/errors.ts`.
 ```
 
-## Tradeoff Note
+A tuned 6-rule file that matches your real failure modes is better than a long instruction file full of unused preferences.
 
-These guidelines bias toward **caution over speed**. For trivial tasks (simple typo fixes, obvious one-liners), use judgment — not every change needs the full rigor.
+## Key idea
 
-The goal is reducing costly mistakes on non-trivial work, not slowing down simple tasks.
+`CLAUDE.md` should not be a preference dump. Treat it as a behavior contract: each rule should close a failure mode you have actually seen.
 
 ## License
 
