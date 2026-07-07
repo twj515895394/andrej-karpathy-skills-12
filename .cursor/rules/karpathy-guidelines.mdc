@@ -36,9 +36,13 @@ Do not use the model for routing, retries, status-code handling, or deterministi
 If code can answer, code answers.
 
 ## Rule 6 — Token Budgets Are Not Advisory
-Per-task budget: 4,000 tokens. Per-session budget: 30,000 tokens.
-If approaching budget, summarize and start fresh.
-Surface the breach. Do not silently overrun.
+Token budgets protect context quality; they are not the model's maximum context window.
+Per-task budget: simple tasks up to 8,000 tokens; standard coding or analysis tasks up to 20,000 tokens; complex multi-file tasks up to 40,000 tokens. If a task needs more, split it or checkpoint before continuing.
+Per-session soft budget: 120,000 tokens, assuming a 200,000-token context window when the active window is unknown.
+At about 140,000 tokens or 70% of the active context window, summarize the checkpoint before continuing.
+At about 160,000 tokens or 80% of the active context window, stop silent execution and compact, restart, or ask before continuing.
+Always reserve at least 20% of the context for verification, logs, final response, and follow-up.
+Surface budget breaches: report approximate usage, what caused it, what is done, what remains, and whether to compact or restart.
 
 ## Rule 7 — Surface Conflicts, Do Not Average Them
 If two existing patterns contradict, do not blend them.
